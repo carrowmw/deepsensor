@@ -1175,17 +1175,17 @@ def run_gridded_tnp_model(
 
 
 def _to_torch_float(value) -> torch.Tensor:
-    if torch.is_tensor(value):
-        return value.float()
-
     if hasattr(value, "y") and hasattr(value, "mask"):
         value = value.y
 
-    if isinstance(value, np.ma.MaskedArray):
-        value = value.filled(np.nan)
-
     if hasattr(value, "data") and not isinstance(value, np.ndarray):
         value = value.data
+
+    if torch.is_tensor(value):
+        return value.float()
+
+    if isinstance(value, np.ma.MaskedArray):
+        value = value.filled(np.nan)
 
     arr = np.asarray(value)
     if arr.dtype == np.object_:
